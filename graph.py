@@ -14,29 +14,26 @@ class Graph:
 	def add_edge(self, *edges):
 		for (from_node, to_node) in edges:
 			self.edges[from_node].append(to_node)
+			self.edges[to_node].append(from_node)
 
 	def __str__(self):
-		print(self.edges)
 		s = ''
 		for from_node in self.nodes:
-			printed_nodes = set()
 			s += from_node + ':\n'
-			for node in self.nodes:
-				if from_node in self.edges[node]:
-					s += '   - ' + node + '\n'
-					printed_nodes.add(node)
 			for node in self.edges[from_node]:
-				if node not in printed_nodes:
-					s += '   - ' + node + '\n'
+				s += '   - ' + node + '\n'
 		return s[:-1]
 
 	def view(self):
 		graph = graphviz.Graph('graph')
+		drew_nodes = []
 		for node in self.nodes:
 			graph.node(node, node)
 		for from_node in self.nodes:
 			for to_node in self.edges[from_node]:
-				graph.edge(from_node, to_node, concentrate = 'True')
+				if to_node not in drew_nodes:
+					graph.edge(from_node, to_node, concentrate = 'True')
+			drew_nodes.append(from_node)
 		graph.view()
 	
 	def random(self, amount_of_nodes = 5, amount_of_edges = 1):
@@ -66,11 +63,14 @@ class Graph:
 				self.add_edge((current_node, choiced_node))
 			nodes_not_visited.discard(current_node)
 
+		def find_path(self, from_node, to_node):
+			pass
+
 if __name__ == '__main__':
 	graph = Graph()
 	graph.add_node('a','b','c')
 	graph.add_edge(('a','b'), ('b','c'), ('c','a'))
-	graph.random(15,1)
+	graph.random(15,5)
 	print(graph)
 	graph.view()
 
