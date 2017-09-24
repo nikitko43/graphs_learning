@@ -1,4 +1,5 @@
 from collections import defaultdict
+import graphviz
 
 class Graph:
 	def __init__(self):
@@ -21,9 +22,19 @@ class Graph:
 				s += '   - ' + node + '\n'
 		return s[:-1]
 
+	def view(self):
+		graph = graphviz.Graph('graph')
+		for node in self.nodes:
+			graph.node(node, node)
+		for head_node in self.nodes:
+			for tail_node in self.edges[head_node]:
+				graph.edge(head_node, tail_node, concentrate = 'True')
+		graph.view()
+
 if __name__ == '__main__':
 	graph = Graph()
 	graph.add_node('a','b','c')
 	graph.add_edge(('a','b'), ('b','c'), ('c','a'))
 	print(graph)
+	graph.view()
 
